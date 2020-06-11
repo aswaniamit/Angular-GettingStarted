@@ -49,13 +49,22 @@ export class ProductListComponent implements OnInit {
   // Interface Implementation
   ngOnInit(): void {
     console.log('In OnInit');
-    this.productService.getProducts().subscribe({
-      next: products => {
-        this.products = products;
-        this.filteredProducts = this.products;
-      },
-      error: err => this.errorMessage = err
-    });
+    // Create observer object
+    //It Takes 3 parameters
+    //next -Foreach value returned by the observable
+    //error - for error handling(asynchrnous)
+    //complete - called when observable completes sending values
+      const myObserver = {
+        next: products => {
+          this.products = products;
+          this.filteredProducts = this.products;
+        },
+        error: err => this.errorMessage = err,
+        complete: () => console.log('Observer got a complete notification'),
+      };
+
+      //when subscribing an observable takes an observer as a param
+    this.productService.getProducts().subscribe(myObserver);
 
   }
 
